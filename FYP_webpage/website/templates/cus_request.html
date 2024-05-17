@@ -1,0 +1,113 @@
+<head>
+    <script>
+        new DataTable('#example');
+       </script>
+    <style>
+        .status-accepted {
+            color: rgb(40, 220, 0) !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            background-color: #ccffcc; /* Light green background */
+        }
+
+        .status-rejected {
+            color: red !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            background-color: #ffcccc; /* Light red background */
+        }
+
+        .status-pending {
+            color: rgb(255, 255, 0) !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            background-color: #ffffcc; /* Light yellow background */
+        }
+
+        .status-received {
+            color: gray !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            background-color: #f2f2f2; /* Light gray background */
+        }
+
+        .status-closed {
+            color: rgb(2, 2, 255) !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            background-color: #f2f2f2; /* Light gray background */
+        }
+
+    </style>
+</head>
+{% extends "base.html" %}
+{% block title %}My Request{% endblock %}
+{% block content %}
+    <style>
+        .blur-form{
+        padding-top: 20px;
+        padding-right: 50px;
+        padding-left: 50px;
+        padding-bottom: 50px;
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
+        backdrop-filter: blur(15px);
+
+        }
+    </style>
+    <br>
+    <div class="container ">
+        <div class="blur-form">
+            <h1 style="font-size: 45px;" >My Request</h1>
+            <br>
+            <table class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Brand Name</th>
+                        <th>Model Name</th>
+                        <th>Gender</th>
+                        <th>Size</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in requests %}
+                        <tr>
+                            <td>{{ request.id }}</td>
+                            <td>{{ request.brand_name }}</td>
+                            <td>{{ request.model_name }}</td>
+                            <td>{{ request.gender }}</td>
+                            <td>{{ request.size }}</td>
+                            <td>{{ request.date }}</td>
+                            <td class="{% if request.status == 'ACCEPTED' %} status-accepted
+                                            {% elif request.status == 'REJECTED' %} status-rejected
+                                            {% elif request.status == 'CLOSED' %} status-closed
+                                            {% elif request.status == 'PENDING' %} status-pending
+                                            {% elif request.status == 'RECEIVED' %} status-received
+                                            {% endif %}">
+                                {{ request.status }}
+                            </td>
+                            <td>
+                                {% if request.status == 'PENDING' %}
+                                    <form action="/close-request" method="POST" style="display: inline;">
+                                        <input type="hidden" name="request_id" value="{{ request.id }}">
+                                        <button type="submit" class="btn btn-danger btn-sm">Close</button>
+                                    </form>
+                                {% elif request.status == 'ACCEPTED' %}
+                                    <form action="/received-request" method="POST" style="display: inline;">
+                                        <input type="hidden" name="request_id" value="{{ request.id }}">
+                                        <button type="submit" class="btn btn-success btn-sm">Received</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+    <!-- Bootstrap JS (Optional, for some features) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Validation{% endblock %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile</title>
+    <style>
+      .form-box {
+        /* Existing styles */
+        position: relative;
+        width: fit-content;
+        padding-top: 20px;
+        padding-right: 50px;
+        padding-left: 50px;
+        padding-bottom: 20px;
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
+        backdrop-filter: blur(15px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        transition: transform 0.5s ease, height 0.2s ease;
+
+        /* New styles for positioning */
+        left: 50%;
+        transform: translateX(-50%);
+        
+      }
+    .underline-input {
+        outline: none; /* Remove default focus outline */
+        border: none; /* Remove default input border */
+        border-bottom: 1px solid #000; /* Add a bottom border */
+        border-radius: 0; /* Ensure no border radius */
+        padding: 5px 0; /* Adjust padding as needed */
+        margin-bottom: 30px;
+        background:transparent;
+    }
+
+        /* Optional: Hover and focus styles */
+    .underline-input:focus,
+    .underline-input:hover {
+        outline: none; /* Remove default focus outline */
+        border-bottom: 2px solid #000; /* Adjust underline thickness or color on focus */
+        background:transparent;
+    }
+
+    body {
+        font-family: 'Transat', sans-serif !important;
+    }
+
+  </style>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+</head>
+  <body>
+  
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">          
+                <div class="form-box">    
+                    <form action="/validate" method="post">
+                        <h1 class="text-center mb-4" style="padding-bottom: 60px; padding-top: 40px;">EMAIL VALIDATION</h1>
+
+                            <!-- Left column for email and name -->
+                            <div >
+                                <div class="form-group input-group"> 
+                                    <div>
+                                        <label for="email" style="margin-right: 20px;">Email:</label>
+                                    </div>
+                                    <input type="text" style="margin-right: 20px; margin-bottom: 45px;" class="form-control underline-input" id="email" name="email" required>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary" id="sendVerification">Send Verification Code</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div  id="otpSection" style="display: none;">
+                                <div class="form-group input-group"> 
+                                    <div>
+                                        <label for="otp" style="margin-right: 20px;">OTP:</label>
+                                    </div>
+                                    <input type="text" style="margin-right: 20px ;" class="form-control underline-input" id="otp" name="otp" required>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary">Verify OTP</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                    </form>
+                </div> 
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function() {
+            $('#sendVerification').on('click', function() {
+                var emailValue = $('#email').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '/sendemail',
+                    data: { email: emailValue },
+                    success: function(response) {
+                        console.log(response);
+                        if (response.success) {
+                            // Display success message
+                            alert('OTP Sent! Please Check Your Email Junk');
+                        } else {
+                            // Display error message
+                            alert('Email entered was not registered, please enter another account');
+                        }
+                        $('#otpSection').show();
+                        $('#emailForm').attr('action', '/sendemail');
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
+
+  </body>
+  {% endblock %}

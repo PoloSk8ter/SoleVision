@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% block title %}Shoe Request Form{% endblock %}
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoe Request Form</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <style>
+      #video {
+        border-radius: 30px; /* Adjust the border radius as needed */
+        /* Add any other styles you want for the video element */
+      }
+      .btn-primary{
+        background-color: #332619; /* Set your desired background color */
+        border-color:#332619;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div class="container d-flex justify-content-center align-items-center " style="margin-top: 50px;">
+      <div class="row">
+        <div class="col-md-6 ">
+          <div class="card mb-10" style="border-radius: 25px;">
+              <div class="card-body">
+                  <h2 align = "center" style="margin-top: 5px;">CURRENT LOCATION</h2>
+                  <video id="video" width="640" height="auto" autoplay style="width: 100%; margin-top: 10px; margin-bottom: 20px;" ></video>
+                  <canvas id="canvas" width="640" height="450" style="display: none; width: 100%; "></canvas>
+
+                  <div id="captureBtnDiv" class="text-center">
+                      <button id="captureBtn" class="btn btn-primary" onclick="captureFrame()">Capture</button>
+                  </div>                
+              </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card mb-10" style="border-radius: 25px;">
+            <div class="card-body d-flex justify-content-center align-items-center">
+
+              <form align="center" action="/send-request" method="POST" onsubmit="return confirmSubmit()">
+                <div class="form-group">
+                  <h2 align = "center" style="margin-top: 5px;">YOUR REQUEST</h2>
+                  <label for="brand">Select Brand:</label>
+                  <select class="form-control" id="brand" name="brand">
+                    <option value="" disabled selected>Select Brand</option>
+                    <!-- The options for brands will be populated dynamically using backend/templating -->
+                    {% for brand, ids in brands.items() %}
+                        {% for id in ids %}
+                        <option value="{{ id }}">{{ brand }}</option>
+                        {% endfor %}
+                    {% endfor %}
+                  </select>
+                </div>
+          
+                <!-- Hidden Dropdown for Models -->
+                <div id="modelsDiv" class="form-group" style="display:none;">
+                  <label for="model">Select Model:</label>
+                  <select class="form-control" id="model" name="model">
+                    <option value="">Select Model</option>
+                    <!-- The options for models will be populated dynamically using JavaScript -->
+                  </select>
+                </div>
+          
+                <div class="form-group">
+                  <label for="gender">Select Gender:</label>
+                  <select class="form-control" id="gender" name="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                </div>
+          
+                <div class="form-group">
+                  <label for="height">Height (in cm):</label>
+                  <input required type="number" class="form-control" id="height" name="height" placeholder="Enter your height in cm" min="0"> 
+                </div>
+        
+                <div class="form-group">
+                    <label for="capturedImage">Your Location:</label>
+                    <div id="capturedImageContainer"  >
+                        <img  id="capturedImage" width="230" height="150" style="display: none; " >
+                    </div>
+                </div>
+        
+                <!-- Hidden input for captured image data -->
+                <input required type="hidden" id="capturedImageData" name="capturedImageData">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <script>
+function sendImageData(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    // Confirm submission
+    const confirmation = confirmSubmit(); // Function to confirm submission
+
+    // Submit the form via AJAX if confirmed
+    if (confirmation) {
+        const formData = new FormData(document.querySelector('form'));
+
+        fetch('/send-request', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                // Redirect or navigate to another page upon successful submission
+                window.location.href = '/success'; // Replace '/success' with your desired URL
+            } else {
+                // Handle other responses if needed
+                console.error('Error occurred:', response.status);
+            }
+        })
+        .catch(error => {
+            console.error('Error sending image data:', error);
+            // Handle errors if any
+        });
+    }
+
+    return confirmation; // Return the confirmation result
+}
+
+  </script>
+
+  <script>
+      var video = document.getElementById('video');
+      var canvas = document.getElementById('canvas');
+      var context = canvas.getContext('2d');
+      var capturedFrame = document.getElementById('capturedFrame');
+      var imageForm = document.getElementById('imageForm');
+      var imgDataInput = document.getElementById('imgData');
+      var captureBtnDiv = document.getElementById('captureBtnDiv');
+      var uploadBtns = document.getElementById('uploadBtns');
+
+      var stream;
+      navigator.mediaDevices.getUserMedia({ video: true })
+          .then(function(mediaStream) {
+              stream = mediaStream;
+              video.srcObject = mediaStream;
+          })
+          .catch(function(err) {
+              console.log("An error occurred: " + err);
+          });
+
+      function captureFrame() {
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          var dataURL = canvas.toDataURL('image/png');
+          capturedImage.src = dataURL;
+          capturedImage.style.display = 'block';
+          capturedImageData.value = dataURL; // Set the captured image data in the hidden input field
+
+          var captureButton = document.getElementById('captureBtn');
+          captureButton.style.backgroundColor = '#332619';
+          captureButton.style.borderColor = '#332619';
+
+          // Adjust hover color (optional)
+          captureButton.onmouseover = function() {
+              this.style.backgroundColor = '#614830';
+              this.style.borderColor = '#614830';
+          };
+
+
+        
+      }
+
+ 
+  </script>
+
+
+
+   
+  
+    <!-- JavaScript to handle dropdown interactivity -->
+    <script>
+
+      $(document).ready(function() {
+        $('#brand').change(function() {
+            var brandId = $(this).val();
+            if (brandId) {
+                $.ajax({
+                    url: '/request_models/' + brandId,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#model').empty();
+                        $('#model').append('<option value="">Select Model</option>');
+                        $.each(data.matching_model_ids, function(index, model) {
+                            $('#model').append('<option value="' + model.id + '">' + model.name + '</option>');
+                        });
+                        $('#modelsDiv').show();
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            } else {
+                $('#modelsDiv').hide();
+                $('#model').empty();
+            }
+        });
+    });
+
+
+      function confirmSubmit() {
+            // Display a confirmation dialog
+            var confirmation = confirm("Are you sure you want to send this request?");
+            
+            // Return true if user confirms, false otherwise
+            return confirmation;
+        }
+
+
+    </script>
+  </body>
+
+  {% endblock %}

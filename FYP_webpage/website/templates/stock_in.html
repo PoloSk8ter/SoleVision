@@ -1,0 +1,266 @@
+<head>
+    <style>
+        .form-box {
+        /* Existing styles */
+        position: relative;
+        width: 500px;
+        padding-top: 20px;
+        padding-right: 50px;
+        padding-left: 50px;
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
+        backdrop-filter: blur(15px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        transition: transform 0.5s ease, height 0.2s ease;
+
+        /* New styles for positioning */
+        left: 50%;
+        transform: translateX(-50%);
+        }
+
+        .form-group{
+            width: 300px;;
+        }
+
+        .blur-form{
+            position:relative;
+            width: 1300px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            padding-top: 20px;
+            padding-right: 50px;
+            padding-left: 50px;
+            padding-bottom: 50px;
+            background: transparent;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+        }
+        .buttons-copy {
+            background-color: #311e0f !important; /* Dark Brown */
+            color: #fff !important; /* White text */
+        }
+
+        .buttons-csv {
+            background-color: #d1ae8d !important; /* Light Brown */
+            color: #fff !important; /* White text */
+        }
+
+        .buttons-excel {
+            background-color: #f4e4c9 !important; /* Beige */
+            color: black !important; /* White text */
+        }
+
+        .buttons-pdf {
+            background-color: #838562 !important; /* Olive */
+            color: #fff !important; /* White text */
+        }
+
+        .buttons-print {
+            background-color: #525032 !important; /* Dark Olive */
+            color: #fff !important; /* White text */
+        }
+
+
+
+        .buttons-copy,
+        .buttons-csv,
+        .buttons-excel,
+        .buttons-pdf,
+        .buttons-print {
+            border-radius: 5px !important; /* Rounded corners */
+            /* Other button styles */
+        }
+
+        /* Hover styles for buttons */
+        .dt-button:hover {
+            border-color: #666 !important; /* Darken the border color on hover */
+            background-color: black  !important; /* Darken the background color on hover */
+        }
+        .dataTables_filter {
+            margin-bottom: 20px; /* Adds space between the table and search bar */
+        }
+
+        .dataTables_filter label {
+            color: #000; /* Black text */
+            font-weight: bold; /* Bold font */
+        }
+
+        .dataTables_filter input[type="search"] {
+            width: 300px; /* Adjust the width as needed */
+            padding: 5px; /* Add padding for better visibility */
+            border: 1px solid #ccc; /* Add a border for better distinction */
+            border-radius: 5px; /* Rounded corners */
+            box-shadow: none; /* Remove default box shadow */
+        }
+
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link href="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.8/b-2.4.2/b-html5-2.4.2/b-print-2.4.2/datatables.min.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.8/b-2.4.2/b-html5-2.4.2/b-print-2.4.2/datatables.min.js"></script>
+
+</head>
+
+
+{% extends "base.html" %}
+{% block title %}Stock In{% endblock %}
+{% block content %}
+
+<body >
+
+    <head>
+        <title>Stock In</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Bootstrap CSS -->
+       
+    </head>
+    <body>
+        <div class="container mt-5" >
+            <div class="row justify-content-center">
+                <div class="col-md-6">   
+                    <div class="form-box">
+                        <form action="/stock_in" method="POST" style="margin-bottom: 20px;">
+                            <h1 class="text-center mb-4">Stock In</h1>
+                            <div class="form-group">
+                                <label for="brand">Select Brand:</label>
+                                <select id="brand" name="brand" class="form-control " >
+                                    <option value="" disabled selected>Select Brand</option>
+                                    {% for brand in brands %}
+                                        <option value="{{ brand.id }}">{{ brand.brand }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+        
+                            <div id="modelsDiv" style="display:none;" class="form-group ">
+                                <label for="model">Select Model:</label>
+                                <select id="model" name="model" class="form-control">
+                                    <option value="">Select Model</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="size">Size (UK):</label>
+                                <select id="size" name="size" class="form-control ">
+                                    {% for i in range(15, 125, 5) %}
+                                        {% set value = i / 10 %}
+                                        {% if value|int == value %}
+                                            <option value="{{ value }}">{{ value|int }}.0</option>
+                                        {% else %}
+                                            <option value="{{ value }}">{{ value }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+        
+                            <div class="form-group">
+                                <label for="quantity">Quantity:</label>
+                                <input type="number" id="quantity" name="quantity" class="form-control" min="0" step="1" required>
+                            </div>
+                            <br>
+                            
+                            <div class="form-group" align= "center">
+                                <button type="submit" class="btn btn-primary">Stock In</button>
+                            </div>
+                            
+                        </form>
+                        
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <div class="row justify-content center">
+                <div class="col-md-6">
+                    <div class="blur-form">
+                        <div class="row justify-content-center">
+                            <div >
+                                <table id="predict_table" class="table table-striped" style="width:100%">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Brand Name</th>
+                                            <th>Model Name</th>
+                                            <th>Size (UK)</th>
+                                            <th>Quantity</th>
+                                            <th>Month</th>
+                                            <!-- Add more headers if needed -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for record in records %}
+                                            <tr>
+                                                <td>{{ record['brand_name'] }}</td>
+                                                <td>{{ record['model_name'] }}</td>
+                                                <td>{{ record['size'] }}</td>
+                                                <td>{{ record['amount'] }}</td>
+                                                <td>{{ record['month'] }}</td>
+                                                <!-- Add more cells if needed -->
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        
+    
+    
+        <script>
+            $(document).ready(function() {
+                $('#brand').change(function() {
+                    var brandId = $(this).val();
+                    if (brandId) {
+                        $.ajax({
+                            url: '/get_models/' + brandId,
+                            type: 'GET',
+                            success: function(data) {
+                                $('#model').empty();
+                                $('#model').append('<option value="">Select Model</option>');
+                                $.each(data, function(index, model) {
+                                    $('#model').append('<option value="' + model.id + '">' + model.name + '</option>');
+                                });
+                                $('#modelsDiv').show();
+                            },
+                            error: function(error) {
+                                console.log(error);
+                            }
+                        });
+                    } else {
+                        $('#modelsDiv').hide();
+                        $('#model').empty();
+                    }
+                });
+    
+                $('#quantity').on('input', function() {
+                    $('#quantityValue').text($(this).val());
+                });
+            });
+
+        </script>
+        <script>
+            $(document).ready(function() {
+            $('#predict_table').DataTable( {
+                dom:'Bfrtip',
+                buttons: [
+                    
+                    'copy','csv','excel','pdf','print'
+                ]
+            } );
+        
+        
+        } );
+        </script>
+    </body>
+{% endblock %}

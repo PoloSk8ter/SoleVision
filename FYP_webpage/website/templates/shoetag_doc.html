@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Register New Brand{% endblock %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Shoe Tags Preview</title>
+    <style>
+
+        .container {
+            text-align: center;
+        }
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+        .btn-cancel {
+            background-color: #dc3545;
+        }
+        .blur-form{
+            margin-top: 30px;
+            margin-bottom: 30px;
+            padding-top: 20px;
+            padding-right: 50px;
+            padding-left: 50px;
+            padding-bottom: 50px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="blur-form">
+            <h1>Shoe Tags Preview</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Serial Numbers</th>
+                    </tr>
+                </thead>
+                <tbody id="serial_number">
+                    {% for serial in serial_number %}
+                    <tr>
+                        <td>{{ serial }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <form align='center' action="/download" method="POST">
+                <input type="hidden" id="serial_number_input" name="serial_number" value="{% for serial in serial_number %}{{ serial }},{% endfor %}">
+                <button type="submit" class="btn btn-primary">Download</button>
+                <a href="/stock_in" class="btn btn-cancel">Close</a>
+            </form>
+        </div>
+        
+        <!-- <a href="/stock-in" class="btn btn-cancel">Close</a> -->
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Assuming 'serialNumbers' is an array of serial numbers received from Flask
+
+
+
+            // Function to trigger the download request
+            $('#downloadButton').click(function(event) {
+                event.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '/download',
+                    data: JSON.stringify({ serial_number: serial_number }),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        console.log(response);
+                        if (response.success) {
+                            // Display success message
+                            alert('Shoe Tag Downloaded Successfully');
+                        }
+                        
+                    },
+                    error: function(error) {
+                        // Handle error, if needed
+                    }
+                });
+            });
+
+            // Function to close the page
+            $('#cancelButton').click(function(event) {
+                event.preventDefault();
+                window.close(); // Close the preview window/tab
+            });
+
+
+        });
+    </script>
+</body>
+{% endblock %}

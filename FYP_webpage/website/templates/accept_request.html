@@ -1,0 +1,229 @@
+<head>
+  <title>Pending Requests</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10.0.4/swiper-bundle.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+  <style>
+
+    .swiper-slide {
+        margin-right: 20px; /* Adjust the right margin for spacing between cards */
+    }
+    .form-separator {
+        margin-right: 15px; /* Adjust the margin to your desired spacing */
+    }
+    .slide-container{
+        width: 100%;
+        padding: 40px 0;
+    }
+    .slide-content{
+        margin: 0 40px;
+        overflow: hidden;
+        border-radius: 25px;
+    }
+    .card{
+        background-color: #FFF;
+    }
+    .image-content,
+    .card-content{
+        border-radius: 25px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 14px;
+        height: fit-content;
+
+    }
+    .image-content{
+        position: relative;
+        row-gap: 5px;
+        padding: 25px 0;
+    }
+    .overlay{
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        background-color: black;
+        border-radius: 25px 25px 0 25px;
+    }
+    .overlay::before,
+    .overlay::after{
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: -40px;
+        height: 40px;
+        width: 40px;
+        background-color: black;
+    }
+    .overlay::after{
+        border-radius: 0 25px 0 0;
+        background-color: #FFF;
+    }
+    .card-image{
+        position: relative;
+        height: fit-content;
+        width: 90%;
+        background: #FFF;
+        border-radius: 25px;
+        padding: 3px;
+    }
+    .card-image .card-img{
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 25px;
+    }
+    
+    .button{
+        width: 100%;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        color: white;
+        padding: 8px 16px;
+        background-color: black;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    .swiper-navBtn{
+        color: gray;
+        transition: color 0.3s ease;
+    }
+    .swiper-navBtn:hover{
+        color: white;
+    }
+    .swiper-navBtn::before,
+    .swiper-navBtn::after{
+        font-size: 35px;
+    }
+    .swiper-button-next{
+        right: 0;
+    }
+    .swiper-button-prev{
+        left: 0;
+    }
+    .swiper-pagination-bullet{
+        background-color: gray;
+        opacity: 1;
+    }
+    .swiper-pagination-bullet-active{
+        background-color: white;
+    }
+
+
+    @media screen and (max-width: 768px) {
+            .slide-content{
+                margin: 0 10px;
+            }
+            .swiper-navBtn{
+                display: none;
+            }
+        }
+</style>
+</head>
+{% extends "base.html" %}
+{% block title %}Register New Brand{% endblock %}
+{% block content %}
+
+<div class = "section">
+  <div class="slide-container swiper" style="height: fit-content;">
+    <div class="slide-content">
+        <div class="card-wrapper swiper-wrapper">
+            {% for request in requests %}
+  
+            <div class="card swiper-slide" style="border-radius: 25px;">
+              <div class="image-content">
+                <span class="overlay"></span>
+                <div class="card-image">
+                    {% if request.image_base64 %}
+                    <img src="data:image/jpeg;base64,{{ request.image_base64 }}" class="card-img-top" alt="Image" style="border-radius: 25px;">
+                    {% else %}
+                    <p>No image available</p>
+                    {% endif %}
+                </div>
+              </div>
+              <div class="card-content">
+                <table class="table table-borderless">
+                    <tr>
+                      <p class="card-text">Brand: {{ request.brand_name }}</p>
+                    </tr>
+                    <tr>
+                      <p class="card-text">Model: {{ request.model_name }}</p>
+                    </tr>
+                    <tr>
+                      <p class="card-text">Gender: {{ request.gender }}</p>
+                    </tr>
+                    <tr>
+                      <p class="card-text">Shoe Size Demanded: {{ request.size }}</p>
+                    </tr>
+                    <tr>
+                      <p class="card-text">Duration: {{ request.time_difference }} minutes ago</p>
+                    </tr>
+                </table>
+                <div class="d-flex justify-content-center">
+                  <form action="/accept-request" method="POST" class="form-separator">
+                      <input type="hidden" name="request_id" value="{{ request.id }}">
+                      <button type="submit" class="btn btn-primary">Select</button>
+                  </form>
+                  <form action="/reject-request" method="POST">
+                      <input type="hidden" name="request_id" value="{{ request.id }}">
+                      <button type="submit" class="btn btn-danger">Reject</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="swiper-button-next swiper-navBtn"></div>
+    <div class="swiper-button-prev swiper-navBtn"></div>
+    <div class="swiper-pagination"></div>
+  </div>
+</div>
+
+
+
+
+
+              
+
+  <script>
+    var swiper = new Swiper(".slide-content", {
+        slidesPerView: 5,
+        spaceBetween: 25,
+        loop: false,
+        centerSlide: 'true',
+        fade: 'true',
+        grabCursor: 'true',
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+            dynamicBullets: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+
+        breakpoints: {
+            0: {
+                slidesPerView: 1,
+            },
+            520: {
+                slidesPerView: 2,
+            },
+            768: {
+                slidesPerView: 3,
+            },
+            1024: {
+                slidesPerView: 4,
+            }
+            
+        },
+    });
+  </script>
+
+{% endblock %}

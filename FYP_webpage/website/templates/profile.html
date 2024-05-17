@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile</title>
+    <style>
+      .form-box {
+        /* Existing styles */
+        position: relative;
+        width: fit-content;
+        padding-top: 20px;
+        padding-right: 50px;
+        padding-left: 50px;
+        padding-bottom: 20px;
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
+        backdrop-filter: blur(15px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        transition: transform 0.5s ease, height 0.2s ease;
+
+        /* New styles for positioning */
+        left: 50%;
+        transform: translateX(-50%);
+        
+      }
+    .underline-input {
+        outline: none; /* Remove default focus outline */
+        border: none; /* Remove default input border */
+        border-bottom: 1px solid #000; /* Add a bottom border */
+        border-radius: 0; /* Ensure no border radius */
+        padding: 5px 0; /* Adjust padding as needed */
+        margin-bottom: 30px;
+        background:transparent;
+    }
+
+        /* Optional: Hover and focus styles */
+    .underline-input:focus,
+    .underline-input:hover {
+        outline: none; /* Remove default focus outline */
+        border-bottom: 2px solid #000; /* Adjust underline thickness or color on focus */
+        background:transparent;
+    }
+
+    body {
+        font-family: 'Transat', sans-serif !important;
+    }
+
+  </style>
+</head>
+  <body>
+  
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">          
+                <div class="form-box">    
+                    <form action="/profile" method="post">
+                        <h1 class="text-center mb-4" style="padding-bottom: 40px; padding-top: 20px;">MY PROFILE</h1>
+                        <div class="row ">
+                            <!-- Left column for email and name -->
+                            <div class="col-md-6" style="padding-right: 50px;">
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="text" class="form-control underline-input" id="email" name="email" placeholder="{{ email }}" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="name">First Name:</label>
+                                    <input type="text" class="form-control underline-input" id="name" name="name" placeholder="{{ name }}" readonly>
+                                </div>
+                            </div>
+                            <!-- Right column for passwords -->
+                            <div class="col-md-6 "style="padding-left: 50px;">
+                                <div class="form-group">
+                                    <label for="old">Password (Old):</label>
+                                    <input type="password" class="form-control underline-input" id="old" name="old" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="new">Password (New):</label>
+                                    <input type="password" class="form-control underline-input" id="new" name="new" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirm">Password (Confirm):</label>
+                                    <input type="password" class="form-control underline-input" id="confirm" name="confirm" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div align="center" class="form-group" style="padding-top: 30px;">
+                            <button type="submit" class="btn btn-primary">Change Password</button>
+                        </div>
+                    </form>
+                </div> 
+            </div>
+        </div>
+    </div>
+    
+
+
+  </body>
+  {% endblock %}

@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}Requested Shoe{% endblock %}
+{% block content %}
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10.0.4/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <style>
+        body {
+            text-align: center; /* Aligns content horizontally */
+        }
+        table {
+            margin-left: auto; /* Centers the table */
+            margin-right: auto;
+        }
+        form {
+            margin: 0 auto; /* Centers the form */
+            display: inline-block; /* Prevents form from taking full width */
+        }
+        img {
+            display: block; /* Ensure the image doesn't overflow its container */
+            margin: 0 auto; /* Centers the image */
+
+        }
+
+        .swiper-slide {
+            margin-right: 20px; /* Adjust the right margin for spacing between cards */
+        }
+        .form-separator {
+            margin-right: 15px; /* Adjust the margin to your desired spacing */
+        }
+        .slide-container{
+            width: 100%;
+            padding: 40px 0;
+        }
+        .slide-content{
+            margin: 0 40px;
+            overflow: hidden;
+            border-radius: 25px;
+        }
+        .card{
+            background-color: #FFF;
+        }
+
+        .card-content{
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 14px;
+            height: fit-content;
+
+        }
+        
+        
+        .swiper-navBtn{
+            color: gray;
+            transition: color 0.3s ease;
+        }
+        .swiper-navBtn:hover{
+            color: white;
+        }
+        .swiper-navBtn::before,
+        .swiper-navBtn::after{
+            font-size: 35px;
+        }
+        .swiper-button-next{
+            right: 0;
+        }
+        .swiper-button-prev{
+            left: 0;
+        }
+        .swiper-pagination-bullet{
+            background-color: gray;
+            opacity: 1;
+        }
+        .swiper-pagination-bullet-active{
+            background-color: white;
+        }
+
+
+
+        @media screen and (max-width: 768px) {
+                .slide-content{
+                    margin: 0 10px;
+                }
+                .swiper-navBtn{
+                    display: none;
+                }
+            }
+
+    </style>
+</head>
+    <body>
+    <br>
+    <div class="container">
+        <div class="blur-form">
+            <h1 class="text-center">AVAILABLE SHOE LOCATION</h1>             
+            <br>
+            <div class="row justify-content-center">
+                <div style="max-width: 60%;">
+                    <img src="data:image/jpeg;base64, {{ image }}" alt="Requested Shoe" class="img-fluid">
+                </div>
+            </div>
+            <br>
+            <div class = "section">
+                <div class="slide-container swiper" style="height: fit-content;">
+                  <div class="slide-content">
+                      <div class="card-wrapper swiper-wrapper">
+                            {% for tag in results_list %}
+
+                                <div class="card swiper-slide" style="border-radius: 25px;">
+                                    <div class="card-content">
+                                        <h5 class="card-title">Shoe Number {{loop.index}}</h5>
+                                        <p class="card-text">
+                                            Row from Top: {{ tag['row'] }}<br>
+                                            Position from the left: {{ tag['item_number'] }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                            {% endfor %}
+                      </div>
+                  </div>
+                  <div class="swiper-button-next swiper-navBtn"></div>
+                  <div class="swiper-button-prev swiper-navBtn"></div>
+                  <div class="swiper-pagination"></div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <a href="/pending-requests" class="btn btn-primary" style="width: 100px; margin-bottom: 30px;">Exit</a>
+            </div>
+        </div>
+    
+    </div>
+
+</body>
+<script>
+    var swiper = new Swiper(".slide-content", {
+        slidesPerView: 5,
+        spaceBetween: 25,
+        loop: false,
+        centerSlide: 'true',
+        fade: 'true',
+        grabCursor: 'true',
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+            dynamicBullets: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+
+        breakpoints: {
+            0: {
+                slidesPerView: 1,
+            },
+            520: {
+                slidesPerView: 2,
+            },
+            768: {
+                slidesPerView: 3,
+            },
+            1024: {
+                slidesPerView: 4,
+            }
+            
+        },
+    });
+  </script>
+    
+{% endblock %}

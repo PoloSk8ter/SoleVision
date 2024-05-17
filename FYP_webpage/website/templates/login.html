@@ -1,0 +1,124 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
+    %}
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Login Page</title>
+      <!-- Bootstrap CSS -->
+      <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+      <style>
+            /* Apply Transat font to body */
+          body {
+            font-family: 'Transat', sans-serif !important;
+          }
+          .img_container {
+              position: relative;
+              width: 500px; /* Adjust according to your image size */
+              height: 300px; /* Adjust according to your image size */
+          }
+
+          .base-image,
+          .overlay-image {
+              position: absolute;
+              top: 0;
+              left: 0;
+          }
+
+          .base-image {
+              /* Adjust positioning and size of the overlay image */
+
+              width: 280px; /* Set the width of the overlay image */
+              height: auto; /* Maintain aspect ratio */
+
+          }
+          .overlay-image {
+              /* Adjust positioning and size of the overlay image */
+              top: 270px;
+              left: 200px;
+              width: 390px; /* Set the width of the overlay image */
+              height: auto; /* Maintain aspect ratio */
+
+          }
+          .smaller-width-form {
+            max-width: 400px; /* Adjust the maximum width as needed */
+            margin: 0 auto; /* Center the form horizontally */
+          }
+          .underline-input {
+            outline: none; /* Remove default focus outline */
+            border: none; /* Remove default input border */
+            border-bottom: 1px solid #000; /* Add a bottom border */
+            border-radius: 0; /* Ensure no border radius */
+            padding: 5px 0; /* Adjust padding as needed */
+            background:transparent;
+          }
+
+          /* Optional: Hover and focus styles */
+          .underline-input:focus,
+          .underline-input:hover {
+            outline: none; /* Remove default focus outline */
+            border-bottom: 2px solid #000; /* Adjust underline thickness or color on focus */
+            background:transparent;
+          }
+          body {
+            font-family: 'Transat', sans-serif !important;
+          }
+
+      </style>
+      
+    </head>
+    <body>
+    
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6 pr-md-5">
+          <div class ="img_container">
+            <img src="data:image/jpeg;base64,{{ nike }}" class="base-image" alt="Nike" >
+            <img src="data:image/jpeg;base64,{{ adidas }}" class="overlay-image" alt="Adidas">
+          </div>
+        </div>
+
+        <div class="col-md-6 pl-md-5">
+          <br>
+          <div class="col-md-10 offset-md-6">
+            <br><br><br>
+            <form method="POST" class="smaller-width-form">
+              <h3 class="text-center mb-4" style="font-size: 33px; padding-bottom: 12px;">Login</h3>
+              <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input
+                  type="email"
+                  class="form-control underline-input"
+                  id="email"
+                  name="email"
+                  required
+
+                />
+              </div>
+              <div class="form-group">
+                <label for="password" style="bottom: -20px;">Password:</label>
+                <input
+                  type="password"
+                  class="form-control underline-input"
+                  id="password"
+                  name="password"
+                  required
+
+                />
+              </div>
+              <div class="d-flex justify-content-end mt-3">
+                <a class="link-offset-1 link-offset-1-hover link-underline link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-75-hover" href="/validate" 
+                    style="font-size: 14px;">
+                  Forgotten Password?
+                </a>
+              </div>
+              <div class="text-center" style="padding-top: 30px;">
+                <button type="submit" class="btn btn-primary">Login</button>
+              </div>
+            </form>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+    {% endblock %}

@@ -1,0 +1,190 @@
+<head>
+    <style>
+        body {
+            text-align: center; /* Aligns content horizontally */
+        }
+        table {
+            margin-left: auto; /* Centers the table */
+            margin-right: auto;
+        }
+        form {
+            margin: 0 auto; /* Centers the form */
+            display: inline-block; /* Prevents form from taking full width */
+        }
+        img {
+            display: block; /* Ensure the image doesn't overflow its container */
+            margin: 0 auto; /* Centers the image */
+        }
+        .blur-form{
+            margin-top: 30px;
+            margin-bottom: 30px;
+            padding-top: 20px;
+            padding-right: 50px;
+            padding-left: 50px;
+            padding-bottom: 50px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+        }
+        
+        .buttons-copy {
+            background-color: #311e0f !important; /* Dark Brown */
+            color: #fff !important; /* White text */
+        }
+
+        .buttons-csv {
+            background-color: #d1ae8d !important; /* Light Brown */
+            color: #fff !important; /* White text */
+        }
+
+        .buttons-excel {
+            background-color: #f4e4c9 !important; /* Beige */
+            color: black !important; /* White text */
+        }
+
+        .buttons-pdf {
+            background-color: #838562 !important; /* Olive */
+            color: #fff !important; /* White text */
+        }
+
+        .buttons-print {
+            background-color: #525032 !important; /* Dark Olive */
+            color: #fff !important; /* White text */
+        }
+
+
+        .buttons-copy,
+        .buttons-csv,
+        .buttons-excel,
+        .buttons-pdf,
+        .buttons-print {
+            border-radius: 5px !important; /* Rounded corners */
+            /* Other button styles */
+        }
+
+        /* Hover styles for buttons */
+        .dt-button:hover {
+            border-color: #666 !important; /* Darken the border color on hover */
+            background-color: black  !important; /* Darken the background color on hover */
+        }
+        .dataTables_filter {
+            margin-bottom: 20px; /* Adds space between the table and search bar */
+        }
+
+        .dataTables_filter label {
+            color: #000; /* Black text */
+            font-weight: bold; /* Bold font */
+        }
+
+        .dataTables_filter input[type="search"] {
+            width: 300px; /* Adjust the width as needed */
+            padding: 5px; /* Add padding for better visibility */
+            border: 1px solid #ccc; /* Add a border for better distinction */
+            border-radius: 5px; /* Rounded corners */
+            box-shadow: none; /* Remove default box shadow */
+        }
+    </style>
+    <!-- Bootstrap CSS -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link href="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.8/b-2.4.2/b-html5-2.4.2/b-print-2.4.2/datatables.min.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.8/b-2.4.2/b-html5-2.4.2/b-print-2.4.2/datatables.min.js"></script>
+
+    
+</head>
+{% extends "base.html" %}
+{% block title %}Shoe Monitoring{% endblock %}
+{% block content %}
+
+
+    
+    <body>
+    <div class="container">
+        <div class="blur-form">
+            <h1 class="text-center">Shoe Monitoring</h1>             
+            <br>
+            <div class="row justify-content-center">
+                <div style="max-width: 60%;">
+                    <img src="data:image/jpeg;base64, {{ image }}" alt="Annotated Frame" class="img-fluid">
+                </div>
+                
+            </div>
+            <br>
+            <div class="row justify-content-center">
+                <div >
+                    <table id="predict_table" class="table table-striped" style="width:100%">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Brand</th>
+                                <th>Model</th>
+                                <th>Size (Uk)</th>
+                                <th>Assigned Row</th>
+                                <th>Item Number</th>
+                                <!-- Add more headers if needed -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tag in translated_tags %}
+                                <tr>
+                                    <td>{{ tag['brand'] }}</td>
+                                    <td>{{ tag['model'] }}</td>
+                                    <td>{{ tag['size'] }}</td>
+                                    <td>{{ tag['row'] }}</td>
+                                    <td>{{ tag['item_number'] }}</td>
+                                    <!-- Add more cells if needed -->
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        function reloadPage() {
+            var translated_tags = {{ translated_tags | safe }};
+            
+            // Check if translated_tags is empty
+            if (translated_tags.length === 0) {
+                // Reload the page after 5000 milliseconds (5 seconds)
+                setTimeout(function() {
+                    window.location.reload(true); // Reloads the current page after 5 seconds
+                }, 5000);
+            } else {
+                // If translated_tags is not empty, reload every 30 seconds
+                setInterval(function() {
+                    window.location.reload(true); // Reloads the current page, fetching updated content from the server
+                }, 20000); // 30,000 milliseconds = 30 seconds
+            }
+        }
+
+        // Call the reloadPage function
+        reloadPage();
+    </script>
+
+<script>
+    $(document).ready(function() {
+    $('#predict_table').DataTable( {
+        dom:'Bfrtip',
+        buttons: [
+            
+            'copy','csv','excel','pdf','print'
+        ]
+    } );
+
+
+} );
+</script>
+
+
+</body>
+    
+{% endblock %}
+

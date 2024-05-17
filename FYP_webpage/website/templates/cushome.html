@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %} Customer Home{% endblock %}
+{% block content %}
+<head>
+    <style>
+        .card {
+            margin: 20px; /* Increase the margin between cards */
+            border-radius: 15px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Add shadow for a lifted effect */
+        }
+
+        .shadow-lg {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); /* Add a larger shadow for a more prominent effect */
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <br>
+                <br>
+                <br>>
+                <br>
+                <br>
+                <div class="card-group">
+                    <div class="card shadow-lg" onclick="selectBrand('Nike')"style="width: 1000px; border-radius: 15px; margin: 10px;">
+                        <img src="data:image/jpeg;base64,{{ nike }}" class="card-img-top" alt="Nike" style="margin-bottom: 10px; border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <h5 class="card-title">Nike</h5>
+                        </div>
+                    </div>
+                    <div class="card shadow-lg" onclick="selectBrand('Adidas')"style="width: 1000px; border-radius: 15px; margin: 10px;">
+                        <img src="data:image/jpeg;base64,{{ adidas }}" class="card-img-top" alt="Adidas" style="margin-bottom: 10px; border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <h5 class="card-title">Adidas</h5>
+                        </div>
+                    </div>
+                    <!-- Add similar card structures for Puma, New Balance, and Reebok -->
+                    <div class="card shadow-lg" onclick="selectBrand('Puma')"style="width: 1000px; border-radius: 15px; margin: 10px;">
+                        <img src="data:image/jpeg;base64,{{ puma }}" class="card-img-top" alt="Puma Image" style="margin-bottom: 10px; border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <h5 class="card-title">Puma</h5>
+                        </div>
+                    </div>
+                    <div class="card shadow-lg" onclick="selectBrand('New Balance')"style="width: 1000px; border-radius: 15px; margin: 10px;">
+                        <img src="data:image/jpeg;base64,{{ nb }}" class="card-img-top" alt="New Balance Image" style="margin-bottom: 10px; border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <h5 class="card-title">New Balance</h5>
+                        </div>
+                    </div>
+                    <div class="card shadow-lg" onclick="selectBrand('Reebok')"style="width: 1000px; border-radius: 15px; margin: 10px;">
+                        <img src="data:image/jpeg;base64,{{ reebok }}" class="card-img-top" alt="Reebok Image" style="margin-bottom: 10px; border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <h5 class="card-title">Reebok</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script>
+    function selectBrand(brandName) {
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/cushome';  // Replace with your desired action URL
+
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'brand';
+        input.value = brandName;
+        
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+
+{% endblock %}

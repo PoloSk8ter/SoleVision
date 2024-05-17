@@ -1,0 +1,76 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<style>
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+
+  }
+
+  .img_container {
+      position: relative;
+      width: 1200px; /* Adjust according to your image size */
+      height: 800px; /* Adjust according to your image size */
+  }
+  .time-position{
+      position: absolute;
+      top: 550px;
+      left: 880px;
+  }
+
+  .base-image,
+  .overlay-image,
+  .logo_image {
+      position: absolute;
+      top: 300px;
+      right: 150px;
+  }
+
+  .base-image {
+      /* Adjust positioning and size of the overlay image */
+      width: 900px; /* Set the width of the overlay image */
+      height: auto; /* Maintain aspect ratio */
+
+  }
+  .overlay-image {
+      /* Adjust positioning and size of the overlay image */
+      top: 580px;
+      left: 730px;
+      width: 280px; /* Set the width of the overlay image */
+      height: auto; /* Maintain aspect ratio */
+
+
+  }
+  .logo_image{
+      top: 780px;
+      left: 80px;
+      width: 600px; 
+      height: auto; 
+  }
+</style>
+
+<div class="container" >
+  <div class="row justify-content-center">
+    <div class ="img_container">
+      <img src="data:image/jpeg;base64,{{ home1 }}" class="base-image" alt="Nike" >
+      <img src="data:image/jpeg;base64,{{ home2 }}" class="overlay-image" alt="Adidas">
+      <img src="data:image/jpeg;base64,{{ logo }}" class="logo_image" alt="logo">
+      <h1 class="time-position" id="current-time" style="font-size: 25px !important; font-family: 'Transat', sans-serif !important; color: #f1eee7 !important;"></h1>
+      
+    </div>
+    
+  </div>
+
+</div>
+
+<script>
+  let time = document.getElementById("current-time");
+  setInterval(() =>{
+    let d = new Date();
+    time.innerHTML = d.toLocaleTimeString();
+  }, 1000);
+</script>
+
+{% endblock %}
